@@ -82,7 +82,7 @@ public class AccountService {
 		accountRepository.save(accountFrom);
 		accountRepository.save(accountTo);
 
-		sendNotification();
+		sendNotification(transferDTO);
 
 	}
 
@@ -94,9 +94,11 @@ public class AccountService {
 
 	}
 
-	private void sendNotification() {
-		Mono<Client> mono = this.webClient.method(HttpMethod.GET).uri(URL_NOTIFICATION).retrieve()
-				.bodyToMono(Client.class);
+	private void sendNotification(TransferDTO transferDTO) {
+		Mono<Client> mono = this.webClient.method(HttpMethod.POST).uri(URL_NOTIFICATION)
+				.body(Mono.just("The account with ID " + transferDTO.getAccountFromId() + " has transferred "
+						+ transferDTO.getAmount() + " into your account."), String.class)
+				.retrieve().bodyToMono(Client.class);
 		mono.subscribe(m -> {
 			System.out.println(m.getMessage());
 		});
