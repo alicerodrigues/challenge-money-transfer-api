@@ -1,6 +1,6 @@
 # Challenge Money Transfer   
 
-RESTful API for money tranfer between two accounts
+RESTful API for money transfer between two accounts
 
 ## Requirements
 
