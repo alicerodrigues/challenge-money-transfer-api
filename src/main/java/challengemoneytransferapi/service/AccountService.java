@@ -19,11 +19,13 @@ import challengemoneytransferapi.model.entity.Account;
 import challengemoneytransferapi.model.entity.User;
 import challengemoneytransferapi.repository.AccountRepository;
 import challengemoneytransferapi.repository.UserRepository;
+import lombok.Getter;
 import reactor.core.publisher.Mono;
 
 @Service
 public class AccountService {
 
+	@Getter
 	private final AccountRepository accountRepository;
 	private final UserRepository userRepository;
 	private final TransferService transferService;
@@ -99,10 +101,6 @@ public class AccountService {
 				.body(Mono.just("The account with ID " + transferDTO.getAccountFromId() + " has transferred "
 						+ transferDTO.getAmount() + " into your account."), String.class)
 				.retrieve().bodyToMono(Client.class);
-		mono.subscribe(m -> {
-			System.out.println(m.getMessage());
-		});
-
 	}
 
 }

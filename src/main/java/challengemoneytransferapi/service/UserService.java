@@ -10,10 +10,11 @@ import challengemoneytransferapi.exception.NotFoundException;
 import challengemoneytransferapi.model.dto.UserDTO;
 import challengemoneytransferapi.model.entity.User;
 import challengemoneytransferapi.repository.UserRepository;
+import lombok.Getter;
 
 @Service
 public class UserService {
-
+	@Getter
 	private final UserRepository userRepository;
 
 	@Autowired
