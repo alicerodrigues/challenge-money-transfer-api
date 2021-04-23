@@ -1,0 +1,17 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      PGDATA: /var/lib/postgresql
+    volumes:
+    - pgdata:/var/lib/postgresql
+  web:
+    build: .
+    environment:
+      DB_HOST: db
+    depends_on:
+    - db
+volumes:
+  pgdata:
+    driver: local
