@@ -108,6 +108,20 @@ public class AccountControllerTest {
 	}
 
 	@Test
+	public void testMakeTransferFromLegalPerson() throws Exception {
+		UserDTO userDTO1 = new UserDTO("Joe Co.", "john@john.com", "123456", "11111111111111", PersonType.LEGAL_PERSON);
+		User user1 = userService.createUser(userDTO1);
+		UserDTO userDTO2 = new UserDTO("Jane Doe", "jane@john.com", "123456", "22222222222", PersonType.NATURAL_PERSON);
+		User user2 = userService.createUser(userDTO2);
+		createAccountWithContent("{\"userId\":" + user1.getId() + ",\"balance\":10000}")
+				.andExpect(status().isCreated());
+		createAccountWithContent("{\"userId\":" + user2.getId() + ",\"balance\":1000}").andExpect(status().isCreated());
+		makeTransferWithContent(
+				"{\"accountFromId\":" + user1.getId() + ",\"accountToId\":" + user2.getId() + ",\"amount\":5000}")
+						.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	public void testMakeTransferOverdraft() throws Exception {
 		UserDTO userDTO1 = new UserDTO("John Doe", "john@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON);
 		User user1 = userService.createUser(userDTO1);
