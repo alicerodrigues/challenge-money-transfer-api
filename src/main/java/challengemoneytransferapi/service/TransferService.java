@@ -24,8 +24,7 @@ public class TransferService {
 	}
 
 	public void validate(Account currAccountFrom, Account currAccountTo, TransferDTO transferDTO)
-			throws TransferFromLegalPersonException, NotEnoughFundsException,
-			TransferBetweenSameAccountException {
+			throws TransferFromLegalPersonException, NotEnoughFundsException, TransferBetweenSameAccountException {
 
 		if (transferFromLegalPerson(currAccountFrom)) {
 			throw new TransferFromLegalPersonException(
@@ -51,7 +50,7 @@ public class TransferService {
 	}
 
 	private boolean transferFromLegalPerson(Account account) {
-		User user = userRepository.findById(account.getId()).get();
+		User user = userRepository.findById(account.getUserId()).get();
 		return user.getPersonType().equals(PersonType.LEGAL_PERSON);
 	}
 

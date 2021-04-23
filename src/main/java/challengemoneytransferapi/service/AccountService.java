@@ -47,7 +47,7 @@ public class AccountService {
 	public Account createAccount(AccountDTO accountDTO) {
 		Optional<User> optionalUser = userRepository.findById(accountDTO.getUserId());
 		if (!optionalUser.isPresent()) {
-			throw new NotFoundException("User " + accountDTO.getUserId() + " not fount.");
+			throw new NotFoundException("User " + accountDTO.getUserId() + " not found.");
 		}
 		return accountRepository.save(accountDTO.build());
 	}
