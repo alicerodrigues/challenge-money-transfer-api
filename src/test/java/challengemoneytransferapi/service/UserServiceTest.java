@@ -1,6 +1,7 @@
 package challengemoneytransferapi.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,35 +41,28 @@ public class UserServiceTest {
 
 	@Test
 	public void testCreateUserDuplicateEmail() {
-		try {
-			userService.createUser(
-					new UserDTO("John Doe", "john@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON));
-			userService.createUser(
-					new UserDTO("Jane Doe", "john@john.com", "123456", "22222222222", PersonType.NATURAL_PERSON));
-		} catch (DuplicateUserDataException e) {
-			assertThat(e.getMessage()).isEqualTo("Email john@john.com already exists.");
-		}
+		userService.createUser(
+				new UserDTO("John Doe", "john@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON));
+		assertThatThrownBy(() -> this.userService.createUser(
+				new UserDTO("Jane Doe", "john@john.com", "123456", "22222222222", PersonType.NATURAL_PERSON)))
+						.isInstanceOf(DuplicateUserDataException.class)
+						.hasMessage("Email john@john.com already exists.");
 	}
 
 	@Test
 	public void testCreateUserDuplicateDocument() {
-		try {
-			userService.createUser(
-					new UserDTO("John Doe", "john@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON));
-			userService.createUser(
-					new UserDTO("Jane Doe", "jane@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON));
-		} catch (DuplicateUserDataException e) {
-			assertThat(e.getMessage()).isEqualTo("Document 11111111111 already exists.");
-		}
+		userService.createUser(
+				new UserDTO("John Doe", "john@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON));
+		assertThatThrownBy(() -> this.userService.createUser(
+				new UserDTO("Jane Doe", "jane@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON)))
+						.isInstanceOf(DuplicateUserDataException.class)
+						.hasMessage("Document 11111111111 already exists.");
 	}
 
 	@Test
 	public void testGetUserNotFound() throws Exception {
-		try {
-			userService.getUser(1L);
-		} catch (NotFoundException e) {
-			assertThat(e.getMessage()).isEqualTo("User 1 not found.");
-		}
+		assertThatThrownBy(() -> this.userService.getUser(1L)).isInstanceOf(NotFoundException.class)
+				.hasMessage("User 1 not found.");
 	}
 
 }

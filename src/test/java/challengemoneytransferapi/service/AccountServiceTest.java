@@ -1,6 +1,7 @@
 package challengemoneytransferapi.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 
@@ -48,20 +49,14 @@ public class AccountServiceTest {
 	@Test
 	public void testCreateAccountWithoutUser() {
 		AccountDTO accountDTO = new AccountDTO(1L, new BigDecimal(500));
-		try {
-			accountService.createAccount(accountDTO);
-		} catch (NotFoundException e) {
-			assertThat(e.getMessage()).isEqualTo("User 1 not found.");
-		}
+		assertThatThrownBy(() -> this.accountService.createAccount(accountDTO)).isInstanceOf(NotFoundException.class)
+				.hasMessage("User 1 not found.");
 	}
 
 	@Test
-	public void testGetAccountNotFound() throws Exception {
-		try {
-			accountService.getAccount(1L);
-		} catch (NotFoundException e) {
-			assertThat(e.getMessage()).isEqualTo("Account 1 not found.");
-		}
+	public void testGetAccountNotFound() {
+		assertThatThrownBy(() -> this.accountService.getAccount(1L)).isInstanceOf(NotFoundException.class)
+				.hasMessage("Account 1 not found.");
 	}
 
 	@Test
@@ -70,11 +65,8 @@ public class AccountServiceTest {
 				new UserDTO("John Doe", "john@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON));
 		Account accounTo = accountService.createAccount(new AccountDTO(user.getId(), new BigDecimal(100)));
 		TransferDTO transferDTO = new TransferDTO(1L, accounTo.getId(), new BigDecimal(200));
-		try {
-			accountService.makeTransfer(transferDTO);
-		} catch (NotFoundException e) {
-			assertThat(e.getMessage()).isEqualTo("Account 1 not found.");
-		}
+		assertThatThrownBy(() -> this.accountService.makeTransfer(transferDTO)).isInstanceOf(NotFoundException.class)
+				.hasMessage("Account 1 not found.");
 	}
 
 	@Test
@@ -83,11 +75,8 @@ public class AccountServiceTest {
 				new UserDTO("John Doe", "john@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON));
 		Account accounFrom = accountService.createAccount(new AccountDTO(user.getId(), new BigDecimal(100)));
 		TransferDTO transferDTO = new TransferDTO(accounFrom.getId(), 2L, new BigDecimal(200));
-		try {
-			accountService.makeTransfer(transferDTO);
-		} catch (NotFoundException e) {
-			assertThat(e.getMessage()).isEqualTo("Account 2 not found.");
-		}
+		assertThatThrownBy(() -> this.accountService.makeTransfer(transferDTO)).isInstanceOf(NotFoundException.class)
+				.hasMessage("Account 2 not found.");
 	}
 
 }

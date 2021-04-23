@@ -1,6 +1,6 @@
 package challengemoneytransferapi.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 
@@ -36,11 +36,10 @@ public class TransferServiceTest {
 		Account accountFrom = new Account(2L, userFrom.getId(), new BigDecimal(200));
 		Account accountTo = new Account(1L, 1L, new BigDecimal(500));
 		TransferDTO transferDTO = new TransferDTO(2L, accountTo.getId(), new BigDecimal(200));
-		try {
-			transferService.validate(accountFrom, accountTo, transferDTO);
-		} catch (TransferFromLegalPersonException e) {
-			assertThat(e.getMessage()).isEqualTo("Transfer from account 2 not permitted.");
-		}
+
+		assertThatThrownBy(() -> transferService.validate(accountFrom, accountTo, transferDTO))
+				.isInstanceOf(TransferFromLegalPersonException.class)
+				.hasMessage("Transfer from account 2 not permitted.");
 	}
 
 	@Test
@@ -50,11 +49,9 @@ public class TransferServiceTest {
 		Account accountFrom = new Account(2L, userFrom.getId(), new BigDecimal(100));
 		Account accountTo = new Account(1L, 1L, new BigDecimal(500));
 		TransferDTO transferDTO = new TransferDTO(2L, accountTo.getId(), new BigDecimal(200));
-		try {
-			transferService.validate(accountFrom, accountTo, transferDTO);
-		} catch (NotEnoughFundsException e) {
-			assertThat(e.getMessage()).isEqualTo("Not enough funds on account 2 balance=100");
-		}
+
+		assertThatThrownBy(() -> transferService.validate(accountFrom, accountTo, transferDTO))
+				.isInstanceOf(NotEnoughFundsException.class).hasMessage("Not enough funds on account 2 balance=100");
 	}
 
 	@Test
@@ -63,11 +60,9 @@ public class TransferServiceTest {
 				new UserDTO("John Doe", "john@john.com", "123456", "11111111111", PersonType.NATURAL_PERSON).build());
 		Account account = new Account(1L, userFrom.getId(), new BigDecimal(100));
 		TransferDTO transferDTO = new TransferDTO(account.getId(), account.getId(), new BigDecimal(10));
-		try {
-			transferService.validate(account, account, transferDTO);
-		} catch (TransferBetweenSameAccountException e) {
-			assertThat(e.getMessage()).isEqualTo("Transfer to self not permitted.");
-		}
+
+		assertThatThrownBy(() -> transferService.validate(account, account, transferDTO))
+				.isInstanceOf(TransferBetweenSameAccountException.class).hasMessage("Transfer to self not permitted.");
 	}
 
 	@Test
