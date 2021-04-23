@@ -13,10 +13,9 @@ PostgresSql
 - Environment Variables 
 
 ```bash
-set DATA_BASE=${DB_BASE}
+
 set DB_HOST={DB_HOST}
-set DB_PASS=${DB_PASS}
-set DB_USER=${DB_USER}
+
 ```
 - Run API
 
