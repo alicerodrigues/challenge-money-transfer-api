@@ -29,17 +29,19 @@ public class AccountService {
 	private final AccountRepository accountRepository;
 	private final UserRepository userRepository;
 	private final TransferService transferService;
-	private WebClient webClient;
+	private final WebClient webClient;
+	private final NotificationService notificationService;
 	private final String URL_AUTHORIZED = "/8fafdd68-a090-496f-8c9a-3442cf30dae6";
-	private final String URL_NOTIFICATION = "/b19f7b9f-9cbf-4fc6-ad22-dc30601aec04";
 
 	@Autowired
 	public AccountService(AccountRepository accountRepository, UserRepository userRepository,
-			TransferService transferService, WebClient webClient) {
+			TransferService transferService, WebClient webClient, NotificationService notificationService) {
 		this.accountRepository = accountRepository;
 		this.transferService = transferService;
 		this.userRepository = userRepository;
 		this.webClient = webClient;
+		this.notificationService = notificationService;
+
 	}
 
 	public Account createAccount(AccountDTO accountDTO) {
@@ -84,8 +86,8 @@ public class AccountService {
 		accountRepository.save(accountFrom);
 		accountRepository.save(accountTo);
 
-		sendNotification(transferDTO);
-
+		notificationService.notifyAboutTransfer(transferDTO, "The account with ID + " + transferDTO.getAccountFromId()
+				+ " has transferred " + transferDTO.getAmount() + " into your account.");
 	}
 
 	private boolean authorized() {
@@ -94,13 +96,6 @@ public class AccountService {
 		Client authorize = mono.block();
 		return authorize.getMessage().equals("Autorizado");
 
-	}
-
-	private void sendNotification(TransferDTO transferDTO) {
-		Mono<Client> mono = this.webClient.method(HttpMethod.POST).uri(URL_NOTIFICATION)
-				.body(Mono.just("The account with ID " + transferDTO.getAccountFromId() + " has transferred "
-						+ transferDTO.getAmount() + " into your account."), String.class)
-				.retrieve().bodyToMono(Client.class);
 	}
 
 }
