@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ChallengeMoneyTransferApiApplication {
 
 	@Bean
-	public WebClient webClientProdutos(WebClient.Builder builder) {
+	public WebClient webClient(WebClient.Builder builder) {
 		return builder.baseUrl("https://run.mocky.io/v3")
 				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
 	}
