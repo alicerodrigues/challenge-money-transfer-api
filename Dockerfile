@@ -1,11 +1,7 @@
 FROM openjdk
-
-WORKDIR /usr/src/myapp
-
-COPY /target/challenge-money-transfer-api-*.jar /usr/src/myapp/app.jar
-
-RUN chmod +x /usr/src/myapp/app.jar
-
-ENTRYPOINT ["java"]
-
-CMD ["-jar", "app.jar"] 
+VOLUME /tmp
+EXPOSE 8080
+RUN mkdir -p /app/
+RUN mkdir -p /app/logs/
+ADD target/challenge-money-transfer-api-0.0.1-SNAPSHOT.jar /app/app.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dspring.profiles.active=container", "-jar", "/app/app.jar"]
