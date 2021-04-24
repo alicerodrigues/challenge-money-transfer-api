@@ -4,31 +4,21 @@ RESTful API for money transfer between two accounts
 
 ## Requirements
 
-JVM (Oracle JDK, OpenJDK or GraalVM) 11+ 
-PostgresSql
-
+Docker, Maven
 
 ## How to run
 
-- Environment Variables 
+- Generate .jar 
+  mvn clean install -DskipTests=true
 
-```bash
+ - Build
+  docker-compose up
 
-set DB_HOST={DB_HOST}
+## Test 
+Navigate to http://localhost:8080/swagger-ui.html# 
 
-```
-- Run API
-
-```bash
-mvnw spring-boot:run
-```
-
-
-Documentation in: [http://localhost:8080/swagger-ui.html#/](http://localhost:8081/swagger-ui.html#/)
+- Run tests
+  mvn clean verify
 
 
-## Testes 
 
-```bash
-mvnw clean verify
-```
