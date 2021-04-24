@@ -9,16 +9,23 @@ Docker, Maven
 ## How to run
 
 - Generate .jar 
-  mvn clean install -DskipTests=true
 
- - Build
-  docker-compose up
+```bash
+mvn clean install -DskipTests=true
+```
+- Build
+
+```bash
+docker-compose up
+```
 
 ## Test 
 Navigate to http://localhost:8080/swagger-ui.html# 
 
 - Run tests
-  mvn clean verify
 
+```bash
+mvn clean verify
+```
 
 
